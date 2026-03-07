@@ -10,6 +10,7 @@ import com.riski.pradana.credit.simulator.command.model.CalculateInstallmentComm
 import com.riski.pradana.credit.simulator.command.model.LoadInstallmentCommandRequest;
 
 import java.text.NumberFormat;
+import java.time.Year;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -31,6 +32,7 @@ public class CreditSimulator {
       System.out.print("Choose: ");
 
       int choice = scanner.nextInt();
+      scanner.nextLine();
 
       switch (choice) {
         case 1 -> {
@@ -42,35 +44,100 @@ public class CreditSimulator {
           }
         }
         case 2 -> {
-          System.out.print("Enter Vehicle (Motor|Mobil): ");
-          String vehicleType = scanner.next();
-//          System.out.print("Enter condition (Baru|Bekas): ");
-//          String condition = scanner.next();
-//          System.out.print("Enter Model Year:  ");
-//          String modelYear = scanner.next();
-          System.out.print("Enter total loan:  ");
-          double totalLoan = scanner.nextDouble();
-          System.out.print("Enter tenure:  ");
-          int tenure = scanner.nextInt();
-          System.out.print("Enter total down payment:  ");
-          double totalDownPayment = scanner.nextDouble();
-          CalculateInstallmentCommandRequest request = new CalculateInstallmentCommandRequest(vehicleType, "baru",
-              "2022", totalLoan, tenure, totalDownPayment);
-          CalculateInstallmentCommandResponse response = calculateInstallmentCommand.execute(request);
+          String vehicleType = readOption(scanner, "Jenis Kendaraan (Motor/Mobil): ", "Motor", "Mobil");
+          String vehicleCondition = readOption(scanner, "Kondisi Kendaraan (Baru/Bekas): ", "Baru", "Bekas");
+          int vehicleYear = readVehicleYear(scanner, "Tahun Kendaraan (4 digit): ", vehicleCondition);
+          double totalLoan = readDouble(scanner, "Jumlah Pinjaman (<=1,000,000,000): ", 1, 1_000_000_000);
+          int tenor = readInt(scanner, "Tenor Pinjaman (1-6 tahun): ", 1, 6);
+          double dp = readDouble(scanner, "Jumlah DP: ", 0, totalLoan);
 
-          Locale indonesian = Locale.of("id", "ID");
-          NumberFormat rupiahFormat = NumberFormat.getCurrencyInstance(indonesian);
+          CalculateInstallmentCommandRequest request =
+              new CalculateInstallmentCommandRequest(vehicleType, vehicleCondition, vehicleYear, totalLoan, tenor, dp);
+          try {
+            CalculateInstallmentCommandResponse response = calculateInstallmentCommand.execute(request);
+            Locale indonesian = Locale.of("id", "ID");
+            NumberFormat rupiahFormat = NumberFormat.getCurrencyInstance(indonesian);
+            rupiahFormat.setMaximumFractionDigits(0);
+            rupiahFormat.setMinimumFractionDigits(0);
 
-          for (CalculateInstallmentCommandResponse.Installment inst : response.installments()) {
-            String formattedMonthly = rupiahFormat.format(inst.monthlyInstallment());
-            System.out.printf("tahun %d : %s /bln, suku bunga : %.2f %%\n",
-                inst.year(), formattedMonthly, inst.interestRate());
+            for (CalculateInstallmentCommandResponse.Installment inst : response.installments()) {
+              String formattedMonthly = rupiahFormat.format(inst.monthlyInstallment());
+              System.out.printf("tahun %d : %s/bln, suku bunga : %.1f %%\n",
+                  inst.year(),
+                  formattedMonthly,
+                  inst.interestRate());
+            }
+          } catch (IllegalArgumentException ex) {
+            System.out.println("Input Error: " + ex.getMessage());
           }
         }
         case 3 -> running = false;
         default -> System.out.println("invalid option. choose correct option.");
       }
     }
+  }
 
+  private static String readOption(Scanner scanner, String prompt, String... options) {
+    while (true) {
+      System.out.print(prompt);
+      String input = scanner.nextLine().trim();
+      for (String option : options) {
+        if (input.equalsIgnoreCase(option))
+          return input;
+      }
+      System.out.println("Input salah. Pilih: " + String.join("/", options));
+    }
+  }
+
+  public static int readVehicleYear(Scanner scanner, String prompt, String vehicleCondition) {
+    int currentYear = Year.now().getValue();
+    while (true) {
+      System.out.print(prompt);
+      String line = scanner.nextLine().trim();
+
+      if (!line.matches("\\d{4}")) {
+        System.out.println("Input salah. Masukkan 4 digit angka.");
+        continue;
+      }
+
+      int year;
+      try {
+        year = Integer.parseInt(line);
+      } catch (NumberFormatException e) {
+        System.out.println("Input bukan angka yang valid.");
+        continue;
+      }
+
+      if ("Baru".equalsIgnoreCase(vehicleCondition) && year < currentYear - 1) {
+        System.out.println("Kendaraan Baru tidak boleh lebih tua dari tahun " + (currentYear - 1));
+        continue;
+      }
+
+      return year;
+    }
+  }
+
+  public static int readInt(Scanner scanner, String prompt, int min, int max) {
+    while (true) {
+      System.out.print(prompt);
+      try {
+        int val = Integer.parseInt(scanner.nextLine().trim());
+        if (val >= min && val <= max) return val;
+      } catch (NumberFormatException ignored) {}
+      System.out.printf("Input salah. Masukkan angka antara %d-%d\n", min, max);
+    }
+  }
+
+  private static double readDouble(Scanner scanner, String prompt, double min, double max) {
+    while (true) {
+      System.out.print(prompt);
+      try {
+        double val = Double.parseDouble(scanner.nextLine().trim());
+        if (val >= min && val <= max)
+          return val;
+      } catch (NumberFormatException ignored) {
+      }
+      System.out.printf("Input salah. Masukkan angka antara %.0f-%.0f\n", min, max);
+    }
   }
 }

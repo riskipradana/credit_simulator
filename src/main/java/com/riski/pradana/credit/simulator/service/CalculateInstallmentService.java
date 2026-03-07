@@ -1,6 +1,10 @@
 package com.riski.pradana.credit.simulator.service;
 
+import com.riski.pradana.credit.simulator.command.model.CalculateInstallmentCommandResponse;
+
+import java.util.List;
+
 public interface CalculateInstallmentService {
-  double calculateInterestRate(int year, double baseRate, double currentRate);
-  double calculateMonthlyInstallment(double interestRate, double remainingLoan, double baseInstallment);
+  List<CalculateInstallmentCommandResponse.Installment> calculateMonthlyInstallments(double baseRate,
+      double totalLoan, int tenure);
 }
