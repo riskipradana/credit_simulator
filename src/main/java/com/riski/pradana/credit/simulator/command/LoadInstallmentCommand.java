@@ -1,8 +1,7 @@
 package com.riski.pradana.credit.simulator.command;
 
+import com.riski.pradana.credit.simulator.client.model.Response;
 import com.riski.pradana.credit.simulator.command.model.LoadInstallmentCommandRequest;
-import com.riski.pradana.credit.simulator.command.model.LoadInstallmentCommandResponse;
-import com.riski.pradana.credit.simulator.service.Command;
 
-public interface LoadInstallmentCommand extends Command<LoadInstallmentCommandRequest, LoadInstallmentCommandResponse> {
+public interface LoadInstallmentCommand extends Command<LoadInstallmentCommandRequest, Response<String>> {
 }

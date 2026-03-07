@@ -1,8 +1,8 @@
 package com.riski.pradana.credit.simulator.service.impl;
 
-import com.riski.pradana.credit.simulator.service.LoanService;
+import com.riski.pradana.credit.simulator.service.CalculateInstallmentService;
 
-public class LoanServiceImpl implements LoanService {
+public class CalculateInstallmentServiceImpl implements CalculateInstallmentService {
 
   public static double interestYoYEveryYear = 0.1;
   public static double interestYoYEveryTwoYear = 0.5;
