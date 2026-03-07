@@ -17,24 +17,21 @@ public class CalculateInstallmentCommandImpl implements CalculateInstallmentComm
   @Override
   public CalculateInstallmentCommandResponse execute(CalculateInstallmentCommandRequest request) {
 
-    int baseRate = "Mobil".equalsIgnoreCase(request.vehicleType()) ? BaseInterestRate.car : BaseInterestRate.motorcycle;
+    int baseRate = "Mobil".equalsIgnoreCase(request.vehicleType())
+        ? BaseInterestRate.car :
+        BaseInterestRate.motorcycle;
 
     List<CalculateInstallmentCommandResponse.Installment> installments = new ArrayList<>();
 
     double baseInstallment = request.totalLoan() / (request.tenure() * 12);
+    double currentRate = baseRate;
 
     for (int year = 1; year <= request.tenure(); year++) {
-
-      double interestRate = loanService.calculateInterestRate(year, baseRate);
-      double remainingLoan = request.totalLoan() - (baseInstallment * (year * 12));
-      double monthlyInstallment = loanService.calculateMonthlyInstallment(interestRate, remainingLoan);
-
+      currentRate = loanService.calculateInterestRate(year, baseRate, currentRate);
+      double monthlyInstallment = loanService.calculateMonthlyInstallment(currentRate, request.totalLoan(),
+          baseInstallment);
       CalculateInstallmentCommandResponse.Installment installment =
-          new CalculateInstallmentCommandResponse.Installment();
-      installment.setYear(year);
-      installment.setMonthlyInstallment(monthlyInstallment);
-      installment.setInterestRate(interestRate);
-
+          new CalculateInstallmentCommandResponse.Installment(year, monthlyInstallment, currentRate);
       installments.add(installment);
     }
     return new CalculateInstallmentCommandResponse(installments);

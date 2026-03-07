@@ -8,19 +8,20 @@ public class CalculateInstallmentServiceImpl implements CalculateInstallmentServ
   public static double interestYoYEveryTwoYear = 0.5;
 
   @Override
-  public double calculateInterestRate(int year, int baseRate) {
+  public double calculateInterestRate(int year, double baseRate, double currentRate) {
+    if (year == 1) {
+      return baseRate;
+    }
     int yearsPassed = year - 1;
-
-    double yearlyIncrease = yearsPassed * interestYoYEveryYear;
-    double twoYearIncrease = ((double) yearsPassed / 2) * interestYoYEveryTwoYear;
-
-    return baseRate + yearlyIncrease + twoYearIncrease;
+    if (yearsPassed % 2 == 0) {
+      return currentRate + interestYoYEveryTwoYear;
+    }
+    return currentRate + interestYoYEveryYear;
   }
 
   @Override
-  public double calculateMonthlyInstallment(double interestRate, double remainingLoan) {
-    double totalInterest = remainingLoan * interestRate;
-    double totalLoan = totalInterest + remainingLoan;
-    return totalLoan / 12;
+  public double calculateMonthlyInstallment(double interestRate, double totalLoan, double baseInstallment) {
+    double totalMonthlyInterest = (totalLoan * interestRate / 100) / 12;
+    return baseInstallment + totalMonthlyInterest;
   }
 }
