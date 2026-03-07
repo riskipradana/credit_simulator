@@ -2,7 +2,7 @@ package com.riski.pradana.credit.simulator.command.model;
 
 import java.util.List;
 
-public class GetInstallmentCommandResponse {
+public class CalculateInstallmentCommandResponse {
   private List<Installment> installments;
 
   public static class Installment {

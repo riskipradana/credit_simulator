@@ -1,6 +1,6 @@
 package com.riski.pradana.credit.simulator.command.model;
 
-public class GetInstallmentCommandRequest {
+public class CalculateInstallmentCommandRequest {
   private String vehicleType;
   private String condition;
   private String modelYear;
