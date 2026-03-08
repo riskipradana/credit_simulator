@@ -1,5 +1,6 @@
 package com.riski.pradana.credit.simulator;
 
+import com.riski.pradana.credit.simulator.client.model.InstallmentClientResponse;
 import com.riski.pradana.credit.simulator.client.model.Response;
 import com.riski.pradana.credit.simulator.command.CalculateInstallmentCommand;
 import com.riski.pradana.credit.simulator.command.LoadInstallmentCommand;
@@ -62,9 +63,9 @@ public class CreditSimulator {
 
       switch (choice) {
         case 1 -> {
-          Response<String> response = loadInstallmentCommand.execute(new LoadInstallmentCommandRequest());
+          Response<InstallmentClientResponse> response = loadInstallmentCommand.execute(new LoadInstallmentCommandRequest());
           if (response.success()) {
-            System.out.printf("Monthly Payment: %s%n", response.data());
+            System.out.printf("Monthly Payment: %s%n", response.data().getDisplayValue());
           } else {
             System.out.println("Error = " + response.error());
           }
