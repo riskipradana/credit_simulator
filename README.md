@@ -28,10 +28,9 @@ Run tests:
 mvn test
 ```
 
-Or use the automation scripts:
+Or use the build script:
 
-- **Run tests:** `./bin/test` (runs `mvn -q test`; exits non-zero on failure)
-- **Build JAR:** `./bin/build` (runs `mvn clean package -DskipTests`; produces a runnable JAR used by Docker)
+- **Build (compile, test, install):** `./bin/build` (runs `mvn clean install`; runs tests and produces the runnable JAR)
 
 ---
 
@@ -169,20 +168,18 @@ This means: choose **2** (Create Credit), use Mobil / NEW / 2025 / 100000000 / 5
 | Run with input file     | `./bin/credit_simulator file_inputs.txt` or `bin/credit_simulator file_inputs.txt` |
 | Run with custom file    | `./bin/credit_simulator path/to/your_inputs.txt`   |
 | Compile                 | `mvn compile`                        |
-| Test                    | `mvn test` or `./bin/test`           |
-| Build JAR               | `mvn package` or `./bin/build`       |
+| Test                    | `mvn test`                           |
+| Build (compile, test, install) | `mvn clean install` or `./bin/build` |
 
 ---
 
 ## Run with Docker
 
-1. Build the runnable JAR (required): run `./bin/build` or `mvn package`.
+1. Build the runnable JAR (required): run `./bin/build` or `mvn clean install`.
 2. Build the image: `docker build -t credit-simulator .`
 3. Run the container: `docker run -it --rm credit-simulator`
 4. With file input: `docker run -it --rm credit-simulator path/to/inputs.txt`  
    (Use a path that is available inside the container, or mount a volume if needed.)
-
-You can also use `./bin/run_docker` to build the JAR (if missing), build the image, and run the container; pass optional file path as arguments.
 
 ---
 
@@ -198,6 +195,6 @@ The **Load Existing Credit** option (menu 1) calls an external HTTP service to f
 
 ## Build and automation
 
-- **Tests:** Run with `mvn test` or `./bin/test`. CI runs tests on push/PR to `develop`.
-- **JAR:** Run `mvn package` or `./bin/build` to produce a single runnable (fat) JAR. Docker image build depends on this JAR.
-- **CI:** On push/PR to `develop`, the pipeline compiles and runs tests. On push to `main`/`develop`, the pipeline also builds the Docker image and pushes it. The runnable JAR is produced by `mvn package` and used by the Dockerfile.
+- **Build:** Run `./bin/build` or `mvn clean install` to compile, run tests, and install. This produces the runnable (fat) JAR used by Docker.
+- **Tests only:** Run `mvn test`.
+- **CI:** On push/PR to `develop`, the pipeline compiles and runs tests. On push to `main`/`develop`, the pipeline also builds the Docker image and pushes it.
