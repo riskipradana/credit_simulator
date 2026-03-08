@@ -4,6 +4,15 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 cd "$PROJECT_ROOT"
 
+if ! command -v mvn >/dev/null 2>&1; then
+  echo "Error: mvn is not on PATH. Install Maven and try again." >&2
+  exit 1
+fi
+if ! command -v java >/dev/null 2>&1; then
+  echo "Error: java is not on PATH. Install a JDK and try again." >&2
+  exit 1
+fi
+
 # Run with Maven (works without building JAR)
 exec mvn -q exec:java \
   -Dexec.mainClass="com.riski.pradana.credit.simulator.CreditSimulator" \
