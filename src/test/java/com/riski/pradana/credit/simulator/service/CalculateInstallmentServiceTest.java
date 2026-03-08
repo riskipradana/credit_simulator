@@ -1,5 +1,6 @@
-package com.riski.pradana.credit.simulator.command.impl;
+package com.riski.pradana.credit.simulator.service;
 
+import com.riski.pradana.credit.simulator.command.impl.CalculateInstallmentCommandImpl;
 import com.riski.pradana.credit.simulator.command.model.CalculateInstallmentCommandRequest;
 import com.riski.pradana.credit.simulator.command.model.CalculateInstallmentCommandResponse;
 import com.riski.pradana.credit.simulator.model.BaseInterestRate;
@@ -13,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class CalculateInstallmentTest {
+class CalculateInstallmentServiceTest {
 
   private final CalculateInstallmentCommandImpl command = new CalculateInstallmentCommandImpl();
 

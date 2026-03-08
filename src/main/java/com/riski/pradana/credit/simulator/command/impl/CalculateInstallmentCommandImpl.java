@@ -14,7 +14,15 @@ import java.util.List;
 
 public class CalculateInstallmentCommandImpl implements CalculateInstallmentCommand {
 
-  private final CalculateInstallmentService loanService = new CalculateInstallmentServiceImpl();
+  private final CalculateInstallmentService loanService;
+
+  public CalculateInstallmentCommandImpl() {
+    this(new CalculateInstallmentServiceImpl());
+  }
+
+  public CalculateInstallmentCommandImpl(CalculateInstallmentService loanService) {
+    this.loanService = loanService;
+  }
 
   @Override
   public CalculateInstallmentCommandResponse execute(CalculateInstallmentCommandRequest request) {

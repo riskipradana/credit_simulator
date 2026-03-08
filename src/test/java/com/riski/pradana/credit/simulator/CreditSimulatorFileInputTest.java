@@ -1,6 +1,5 @@
-package com.riski.pradana.credit.simulator.command.impl;
+package com.riski.pradana.credit.simulator;
 
-import com.riski.pradana.credit.simulator.CreditSimulator;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
