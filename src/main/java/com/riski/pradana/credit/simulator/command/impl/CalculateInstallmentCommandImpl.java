@@ -4,6 +4,8 @@ import com.riski.pradana.credit.simulator.command.CalculateInstallmentCommand;
 import com.riski.pradana.credit.simulator.command.model.CalculateInstallmentCommandRequest;
 import com.riski.pradana.credit.simulator.command.model.CalculateInstallmentCommandResponse;
 import com.riski.pradana.credit.simulator.model.BaseInterestRate;
+import com.riski.pradana.credit.simulator.model.Condition;
+import com.riski.pradana.credit.simulator.model.VehicleType;
 import com.riski.pradana.credit.simulator.service.CalculateInstallmentService;
 import com.riski.pradana.credit.simulator.service.impl.CalculateInstallmentServiceImpl;
 
@@ -17,9 +19,12 @@ public class CalculateInstallmentCommandImpl implements CalculateInstallmentComm
   @Override
   public CalculateInstallmentCommandResponse execute(CalculateInstallmentCommandRequest request) {
 
-    validate(request);
+    VehicleType vehicleType = parseVehicleType(request.vehicleType());
+    Condition vehicleCondition = parseCondition(request.vehicleCondition());
 
-    int baseRate = "Mobil".equalsIgnoreCase(request.vehicleType()) ? BaseInterestRate.car : BaseInterestRate.motorcycle;
+    validate(request, vehicleType, vehicleCondition);
+
+    int baseRate = vehicleType == VehicleType.MOBIL ? BaseInterestRate.car : BaseInterestRate.motorcycle;
 
     List<CalculateInstallmentCommandResponse.Installment> installments =
         loanService.calculateMonthlyInstallments(baseRate, request.totalLoan(), request.tenure());
@@ -27,20 +32,29 @@ public class CalculateInstallmentCommandImpl implements CalculateInstallmentComm
     return new CalculateInstallmentCommandResponse(installments);
   }
 
-  private void validate(CalculateInstallmentCommandRequest request) {
+  private static VehicleType parseVehicleType(String value) {
+    VehicleType parsed = VehicleType.fromString(value);
+    if (parsed == null) {
+      throw new IllegalArgumentException("Jenis Kendaraan harus Motor atau Mobil");
+    }
+    return parsed;
+  }
+
+  private static Condition parseCondition(String value) {
+    Condition parsed = Condition.fromString(value);
+    if (parsed == null) {
+      throw new IllegalArgumentException("Kondisi Kendaraan harus Bekas atau Baru");
+    }
+    return parsed;
+  }
+
+  private void validate(CalculateInstallmentCommandRequest request,
+      VehicleType vehicleType,
+      Condition vehicleCondition) {
 
     int currentYear = Year.now().getValue();
 
-    if (!(request.vehicleType().equalsIgnoreCase("Motor") || request.vehicleType().equalsIgnoreCase("Mobil"))) {
-      throw new IllegalArgumentException("Jenis Kendaraan harus Motor atau Mobil");
-    }
-
-    if (!(request.vehicleCondition().equalsIgnoreCase("Bekas") || request.vehicleCondition()
-        .equalsIgnoreCase("Baru"))) {
-      throw new IllegalArgumentException("Kondisi Kendaraan harus Bekas atau Baru");
-    }
-
-    if (request.vehicleCondition().equalsIgnoreCase("Baru") && request.vehicleYear() < (currentYear - 1)) {
+    if (vehicleCondition == Condition.NEW && request.vehicleYear() < (currentYear - 1)) {
       throw new IllegalArgumentException("Kendaraan Baru tidak boleh lebih tua dari tahun " + (currentYear - 1));
     }
 
@@ -53,11 +67,11 @@ public class CalculateInstallmentCommandImpl implements CalculateInstallmentComm
     }
 
     double dpPercent = (request.totalDownPayment() / request.totalLoan()) * 100;
-    if (request.vehicleCondition().equalsIgnoreCase("Baru")) {
-      if (request.vehicleType().equalsIgnoreCase("Mobil") && dpPercent < 35) {
+    if (vehicleCondition == Condition.NEW) {
+      if (vehicleType == VehicleType.MOBIL && dpPercent < 35) {
         throw new IllegalArgumentException("DP Mobil Baru minimal 35% dari total pinjaman");
       }
-      if (request.vehicleType().equalsIgnoreCase("Motor") && dpPercent < 25) {
+      if (vehicleType == VehicleType.MOTOR && dpPercent < 25) {
         throw new IllegalArgumentException("DP Motor Baru minimal 25% dari total pinjaman");
       }
     }
