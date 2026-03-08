@@ -33,4 +33,4 @@ jobs:
       - name: Push Docker Image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/credit-simulator
       - name: Push Docker Image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/credit-simulatorK
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/credit-simulator
