@@ -1,6 +1,7 @@
 package com.riski.pradana.credit.simulator.command.impl;
 
 import com.riski.pradana.credit.simulator.client.InstallmentClient;
+import com.riski.pradana.credit.simulator.client.model.InstallmentClientResponse;
 import com.riski.pradana.credit.simulator.client.model.Response;
 import com.riski.pradana.credit.simulator.command.model.LoadInstallmentCommandRequest;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,15 +37,16 @@ class LoadInstallmentCommandImplTest {
   @Test
   void shouldReturnSuccessResponseWhenClientReturnsSuccess() {
     LoadInstallmentCommandRequest request = new LoadInstallmentCommandRequest();
-    String expectedData = "{\"monthly\": 2000000}";
+    InstallmentClientResponse expectedData = new InstallmentClientResponse("2000000", null);
     when(installmentClient.fetchInstallment()).thenReturn(Response.success(expectedData));
 
-    Response<String> response = command.execute(request);
+    Response<InstallmentClientResponse> response = command.execute(request);
 
     assertNotNull(response);
     assertEquals(SUCCESS_CODE, response.code());
     assertTrue(response.success());
     assertEquals(expectedData, response.data());
+    assertEquals("2000000", response.data().getDisplayValue());
     assertNull(response.error());
     verify(installmentClient).fetchInstallment();
   }
@@ -55,7 +57,7 @@ class LoadInstallmentCommandImplTest {
     String expectedError = "Connection failed: timeout";
     when(installmentClient.fetchInstallment()).thenReturn(Response.failure(expectedError));
 
-    Response<String> response = command.execute(request);
+    Response<InstallmentClientResponse> response = command.execute(request);
 
     assertNotNull(response);
     assertEquals(ERROR_CODE, response.code());
@@ -72,7 +74,7 @@ class LoadInstallmentCommandImplTest {
     String expectedError = "Not found";
     when(installmentClient.fetchInstallment()).thenReturn(Response.failure(customCode, expectedError));
 
-    Response<String> response = command.execute(request);
+    Response<InstallmentClientResponse> response = command.execute(request);
 
     assertNotNull(response);
     assertEquals(customCode, response.code());
@@ -85,7 +87,7 @@ class LoadInstallmentCommandImplTest {
   @Test
   void shouldDelegateToClientAndIgnoreRequest() {
     LoadInstallmentCommandRequest request = new LoadInstallmentCommandRequest();
-    when(installmentClient.fetchInstallment()).thenReturn(Response.success("ok"));
+    when(installmentClient.fetchInstallment()).thenReturn(Response.success(new InstallmentClientResponse("ok", null)));
 
     command.execute(request);
 
@@ -97,7 +99,7 @@ class LoadInstallmentCommandImplTest {
     LoadInstallmentCommandImpl defaultCommand = new LoadInstallmentCommandImpl();
     LoadInstallmentCommandRequest request = new LoadInstallmentCommandRequest();
 
-    Response<String> response = defaultCommand.execute(request);
+    Response<InstallmentClientResponse> response = defaultCommand.execute(request);
 
     assertNotNull(response);
     if (response.success()) {
