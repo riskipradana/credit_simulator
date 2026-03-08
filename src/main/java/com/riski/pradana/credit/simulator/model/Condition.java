@@ -3,7 +3,8 @@ package com.riski.pradana.credit.simulator.model;
 import java.util.Optional;
 
 public enum Condition {
-  NEW, USED;
+  NEW,
+  USED;
 
   public static Condition fromString(String s) {
     if (s == null || s.isBlank()) {

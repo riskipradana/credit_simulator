@@ -153,8 +153,6 @@ class CalculateInstallmentTest {
     assertInstallmentDetail(six.get(5), 6, 9.3, expectedMonthlyInstallment(totalLoan, 6, 9.3));
   }
 
-  // --- Loan boundaries ---
-
   @Test
   void shouldAcceptLoanAtBoundaries() {
     CalculateInstallmentCommandRequest minLoan =
@@ -165,8 +163,6 @@ class CalculateInstallmentTest {
     assertNotNull(command.execute(maxLoan));
   }
 
-  // --- Validation: invalid vehicle type ---
-
   @Test
   void shouldThrowWhenVehicleTypeInvalid() {
     CalculateInstallmentCommandRequest request =
@@ -175,17 +171,13 @@ class CalculateInstallmentTest {
     assertEquals("Jenis Kendaraan harus Motor atau Mobil", ex.getMessage());
   }
 
-  // --- Validation: invalid vehicle condition ---
-
   @Test
   void shouldThrowWhenVehicleConditionInvalid() {
     CalculateInstallmentCommandRequest request =
         new CalculateInstallmentCommandRequest("Mobil", "Rusak", CURRENT_YEAR, 100_000_000, 5, 35_000_000);
     IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> command.execute(request));
-    assertEquals("Kondisi Kendaraan harus Bekas atau Baru", ex.getMessage());
+    assertEquals("Kondisi Kendaraan harus NEW atau USED", ex.getMessage());
   }
-
-  // --- Validation: Baru vehicle year too old ---
 
   @Test
   void shouldThrowWhenBaruVehicleYearTooOld() {
@@ -195,8 +187,6 @@ class CalculateInstallmentTest {
     IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> command.execute(request));
     assertEquals("Kendaraan Baru tidak boleh lebih tua dari tahun " + (CURRENT_YEAR - 1), ex.getMessage());
   }
-
-  // --- Validation: tenure out of range ---
 
   @Test
   void shouldThrowWhenTenureLessThanOne() {
@@ -213,8 +203,6 @@ class CalculateInstallmentTest {
     IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> command.execute(request));
     assertEquals("Tenor harus 1-6 tahun", ex.getMessage());
   }
-
-  // --- Validation: total loan out of range ---
 
   @Test
   void shouldThrowWhenTotalLoanZeroOrNegative() {

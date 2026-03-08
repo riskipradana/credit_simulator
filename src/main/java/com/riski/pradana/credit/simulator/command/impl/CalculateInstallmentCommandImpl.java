@@ -43,7 +43,7 @@ public class CalculateInstallmentCommandImpl implements CalculateInstallmentComm
   private static Condition parseCondition(String value) {
     Condition parsed = Condition.fromString(value);
     if (parsed == null) {
-      throw new IllegalArgumentException("Kondisi Kendaraan harus Bekas atau Baru");
+      throw new IllegalArgumentException("Kondisi Kendaraan harus NEW atau USED");
     }
     return parsed;
   }
