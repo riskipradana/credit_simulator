@@ -165,9 +165,3 @@ This means: choose **2** (Create Credit), use Mobil / NEW / 2025 / 100000000 / 5
 | Run with custom file    | `./bin/credit_simulator path/to/your_inputs.txt`   |
 | Compile                 | `mvn compile`                        |
 | Test                    | `mvn test`                           |
-
-Make the script executable once (if needed):
-
-```bash
-chmod +x bin/credit_simulator
-```

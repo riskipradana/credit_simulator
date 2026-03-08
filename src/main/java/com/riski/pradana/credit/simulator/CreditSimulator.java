@@ -56,6 +56,9 @@ public class CreditSimulator {
       }
 
       int choice = readChoice(scanner, fromFile);
+      if (fromFile) {
+        System.out.println(choice);
+      }
 
       switch (choice) {
         case 1 -> {
@@ -83,6 +86,9 @@ public class CreditSimulator {
             rupiahFormat.setMaximumFractionDigits(0);
             rupiahFormat.setMinimumFractionDigits(0);
 
+            if (fromFile) {
+              System.out.println();
+            }
             for (CalculateInstallmentCommandResponse.Installment inst : response.installments()) {
               String formattedMonthly = rupiahFormat.format(inst.monthlyInstallment());
               System.out.printf("tahun %d : %s/bln, suku bunga : %.1f %%\n",
