@@ -19,7 +19,9 @@ public class InstallmentClient {
           .GET()
           .build();
       HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-      if (response.statusCode() != 200) return Response.failure("HTTP error: " + response.statusCode());
+      if (response.statusCode() != 200) {
+        return Response.failure(response.statusCode(), "HTTP error: " + response.statusCode());
+      }
       return Response.success(response.body());
     } catch (Exception e) {
       return Response.failure("Connection failed: " + e.getMessage());}

@@ -7,7 +7,15 @@ import com.riski.pradana.credit.simulator.command.model.LoadInstallmentCommandRe
 
 public class LoadInstallmentCommandImpl implements LoadInstallmentCommand {
 
-  private final InstallmentClient installmentClient = new InstallmentClient();
+  private final InstallmentClient installmentClient;
+
+  public LoadInstallmentCommandImpl() {
+    this(new InstallmentClient());
+  }
+
+  public LoadInstallmentCommandImpl(InstallmentClient installmentClient) {
+    this.installmentClient = installmentClient;
+  }
 
   @Override
   public Response<String> execute(LoadInstallmentCommandRequest request) {
