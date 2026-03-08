@@ -3,9 +3,9 @@ package com.riski.pradana.credit.simulator.command.impl;
 import com.riski.pradana.credit.simulator.command.CalculateInstallmentCommand;
 import com.riski.pradana.credit.simulator.command.model.CalculateInstallmentCommandRequest;
 import com.riski.pradana.credit.simulator.command.model.CalculateInstallmentCommandResponse;
-import com.riski.pradana.credit.simulator.model.BaseInterestRate;
-import com.riski.pradana.credit.simulator.model.Condition;
-import com.riski.pradana.credit.simulator.model.VehicleType;
+import com.riski.pradana.credit.simulator.constant.BaseInterestRate;
+import com.riski.pradana.credit.simulator.constant.Condition;
+import com.riski.pradana.credit.simulator.constant.VehicleType;
 import com.riski.pradana.credit.simulator.service.CalculateInstallmentService;
 import com.riski.pradana.credit.simulator.service.impl.CalculateInstallmentServiceImpl;
 

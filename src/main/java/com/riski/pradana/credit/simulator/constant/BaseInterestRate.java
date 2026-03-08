@@ -1,4 +1,4 @@
-package com.riski.pradana.credit.simulator.model;
+package com.riski.pradana.credit.simulator.constant;
 
 public interface BaseInterestRate {
   int car = 8;

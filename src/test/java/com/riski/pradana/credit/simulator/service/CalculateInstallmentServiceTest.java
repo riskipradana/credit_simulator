@@ -3,7 +3,7 @@ package com.riski.pradana.credit.simulator.service;
 import com.riski.pradana.credit.simulator.command.impl.CalculateInstallmentCommandImpl;
 import com.riski.pradana.credit.simulator.command.model.CalculateInstallmentCommandRequest;
 import com.riski.pradana.credit.simulator.command.model.CalculateInstallmentCommandResponse;
-import com.riski.pradana.credit.simulator.model.BaseInterestRate;
+import com.riski.pradana.credit.simulator.constant.BaseInterestRate;
 import org.junit.jupiter.api.Test;
 
 import java.time.Year;

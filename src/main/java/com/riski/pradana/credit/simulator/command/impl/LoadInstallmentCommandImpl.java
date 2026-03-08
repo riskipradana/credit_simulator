@@ -1,8 +1,8 @@
 package com.riski.pradana.credit.simulator.command.impl;
 
 import com.riski.pradana.credit.simulator.client.InstallmentClient;
-import com.riski.pradana.credit.simulator.client.InstallmentClientConfig;
-import com.riski.pradana.credit.simulator.client.InstallmentClientImpl;
+import com.riski.pradana.credit.simulator.client.config.InstallmentClientConfig;
+import com.riski.pradana.credit.simulator.client.impl.InstallmentClientImpl;
 import com.riski.pradana.credit.simulator.client.model.InstallmentClientResponse;
 import com.riski.pradana.credit.simulator.client.model.Response;
 import com.riski.pradana.credit.simulator.command.LoadInstallmentCommand;

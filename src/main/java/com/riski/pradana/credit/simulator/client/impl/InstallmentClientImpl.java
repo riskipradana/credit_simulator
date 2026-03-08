@@ -1,6 +1,8 @@
-package com.riski.pradana.credit.simulator.client;
+package com.riski.pradana.credit.simulator.client.impl;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.riski.pradana.credit.simulator.client.InstallmentClient;
+import com.riski.pradana.credit.simulator.client.config.InstallmentClientConfig;
 import com.riski.pradana.credit.simulator.client.model.InstallmentClientResponse;
 import com.riski.pradana.credit.simulator.client.model.Response;
 

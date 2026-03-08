@@ -1,4 +1,4 @@
-package com.riski.pradana.credit.simulator.client;
+package com.riski.pradana.credit.simulator.client.config;
 
 import java.time.Duration;
 
