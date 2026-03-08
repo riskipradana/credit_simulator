@@ -32,6 +32,6 @@ jobs:
 
       - name: Push Docker Image
         run:
-          docker push ${{ secrets.DOCKER_USERNAME }}/credit-simulatorname: Build and Push Docker Image
+          docker push ${{ secrets.DOCKER_USERNAME }}/riskipradana: Build and Push Docker Image
       - name: Push Docker Image
-          run: docker push ${{ secrets.DOCKER_USERNAME }}/credit-simulator
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/credit-simulator
