@@ -45,7 +45,7 @@ public class CreditSimulator {
         }
         case 2 -> {
           String vehicleType = readOption(scanner, "Jenis Kendaraan (Motor/Mobil): ", "Motor", "Mobil");
-          String vehicleCondition = readOption(scanner, "Kondisi Kendaraan (Baru/Bekas): ", "Baru", "Bekas");
+          String vehicleCondition = readOption(scanner, "Kondisi Kendaraan (NEW/USED): ", "NEW", "USED");
           int vehicleYear = readVehicleYear(scanner, "Tahun Kendaraan (4 digit): ", vehicleCondition);
           double totalLoan = readDouble(scanner, "Jumlah Pinjaman (<=1,000,000,000): ", 1, 1_000_000_000);
           int tenor = readInt(scanner, "Tenor Pinjaman (1-6 tahun): ", 1, 6);
@@ -108,7 +108,7 @@ public class CreditSimulator {
         continue;
       }
 
-      if ("Baru".equalsIgnoreCase(vehicleCondition) && year < currentYear - 1) {
+      if ("NEW".equalsIgnoreCase(vehicleCondition) && year < currentYear - 1) {
         System.out.println("Kendaraan Baru tidak boleh lebih tua dari tahun " + (currentYear - 1));
         continue;
       }
