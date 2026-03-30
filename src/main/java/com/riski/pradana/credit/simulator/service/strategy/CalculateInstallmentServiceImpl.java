@@ -10,15 +10,15 @@ import java.util.List;
 /**
  * Strategy: stepped annual interest after year 1 (odd/even year increments via {@link InstallmentInterestPolicy}).
  */
-public final class SteppedInterestInstallmentStrategy implements CalculateInstallmentService {
+public final class CalculateInstallmentServiceImpl implements CalculateInstallmentService {
 
   private final InstallmentInterestPolicy interestPolicy;
 
-  public SteppedInterestInstallmentStrategy() {
+  public CalculateInstallmentServiceImpl() {
     this(InstallmentInterestPolicy.defaultPolicy());
   }
 
-  public SteppedInterestInstallmentStrategy(InstallmentInterestPolicy interestPolicy) {
+  public CalculateInstallmentServiceImpl(InstallmentInterestPolicy interestPolicy) {
     this.interestPolicy = interestPolicy != null ? interestPolicy : InstallmentInterestPolicy.defaultPolicy();
   }
 
@@ -45,7 +45,7 @@ public final class SteppedInterestInstallmentStrategy implements CalculateInstal
 
     for (int year = 1; year <= tenure; year++) {
       currentRate = nextAnnualRate(year, baseRate, currentRate);
-      double monthly = InstallmentScheduleMath.monthlyInstallment(currentRate, totalLoan, baseInstallment);
+      double monthly = InstallmentCalculationUtil.monthly(currentRate, totalLoan, baseInstallment);
       CalculateInstallmentCommandResponse.Installment installment =
           new CalculateInstallmentCommandResponse.Installment(year, monthly, currentRate);
       installments.add(installment);

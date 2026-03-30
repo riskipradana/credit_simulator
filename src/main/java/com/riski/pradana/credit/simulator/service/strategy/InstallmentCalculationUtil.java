@@ -1,11 +1,11 @@
 package com.riski.pradana.credit.simulator.service.strategy;
 
-final class InstallmentScheduleMath {
+final class InstallmentCalculationUtil {
 
-  private InstallmentScheduleMath() {
+  private InstallmentCalculationUtil() {
   }
 
-  static double monthlyInstallment(double interestRate, double totalLoan, double baseInstallment) {
+  static double monthly(double interestRate, double totalLoan, double baseInstallment) {
     double totalMonthlyInterest = (totalLoan * interestRate / 100) / 12;
     return baseInstallment + totalMonthlyInterest;
   }

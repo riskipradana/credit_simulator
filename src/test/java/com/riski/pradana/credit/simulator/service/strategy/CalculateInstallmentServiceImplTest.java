@@ -8,13 +8,13 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class SteppedInterestInstallmentStrategyTest {
+class CalculateInstallmentServiceImplTest {
 
   private static final double RATE_DELTA = 0.001;
 
   @Test
   void standardPolicyMatchesExpectedProgressionForCarBaseRate() {
-    SteppedInterestInstallmentStrategy service = new SteppedInterestInstallmentStrategy(InstallmentInterestPolicy.STANDARD);
+    CalculateInstallmentServiceImpl service = new CalculateInstallmentServiceImpl(InstallmentInterestPolicy.STANDARD);
     List<CalculateInstallmentCommandResponse.Installment> list =
         service.calculateMonthlyInstallments(8, 100_000_000, 5);
     assertEquals(5, list.size());
@@ -28,7 +28,7 @@ class SteppedInterestInstallmentStrategyTest {
   @Test
   void flatPolicyKeepsRateAtBaseAfterYearOne() {
     InstallmentInterestPolicy flat = new InstallmentInterestPolicy(0, 0);
-    SteppedInterestInstallmentStrategy service = new SteppedInterestInstallmentStrategy(flat);
+    CalculateInstallmentServiceImpl service = new CalculateInstallmentServiceImpl(flat);
     List<CalculateInstallmentCommandResponse.Installment> list =
         service.calculateMonthlyInstallments(9, 24_000_000, 3);
     assertEquals(3, list.size());
@@ -39,7 +39,7 @@ class SteppedInterestInstallmentStrategyTest {
 
   @Test
   void nullPolicyFallsBackToStandard() {
-    SteppedInterestInstallmentStrategy service = new SteppedInterestInstallmentStrategy(null);
+    CalculateInstallmentServiceImpl service = new CalculateInstallmentServiceImpl(null);
     List<CalculateInstallmentCommandResponse.Installment> list =
         service.calculateMonthlyInstallments(8, 100_000_000, 2);
     assertEquals(8.0, list.get(0).interestRate(), RATE_DELTA);
