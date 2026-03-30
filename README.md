@@ -2,6 +2,20 @@
 
 A Java application to simulate vehicle credit/loan calculations. Supports interactive input and file-based input.
 
+## Architecture (MVC, CLI)
+
+The interactive flow uses a **Model–View–Controller** split:
+
+| Layer | Package / types | Role |
+|--------|------------------|------|
+| **Model** | [`model`](src/main/java/com/riski/pradana/credit/simulator/model/) (`CreditSimulatorModel`, `DefaultCreditSimulatorModel`) | Facade over use cases; delegates to `command` and underlying `service` / client code. |
+| **View** | [`ui`](src/main/java/com/riski/pradana/credit/simulator/ui/) (`CreditSimulatorView`, `ConsoleCreditSimulatorView`) | All console output and formatting (e.g. Rupiah). |
+| **Input** | [`ui`](src/main/java/com/riski/pradana/credit/simulator/ui/) (`CreditSimulatorInput`, `ScannerCreditSimulatorInput`) | Reads from `Scanner`; uses the View for prompts in interactive mode. |
+| **Controller** | [`CreditSimulatorController`](src/main/java/com/riski/pradana/credit/simulator/ui/CreditSimulatorController.java) | Menu loop; resolves the selected option via a command factory. |
+| **Menu command factory** | [`ui/menu`](src/main/java/com/riski/pradana/credit/simulator/ui/menu/) (`CreditSimulatorMenuCommandFactory`, `SimulatorMenuAction`) | Maps menu choice `1`–`3` (and unknown keys) to handlers that call the Model and View (similar to a webhook-style handler registry). |
+
+[`CreditSimulatorApplication`](src/main/java/com/riski/pradana/credit/simulator/CreditSimulatorApplication.java) is the **composition root** (wires commands, model, and `createController`). [`CreditSimulator.main`](src/main/java/com/riski/pradana/credit/simulator/CreditSimulator.java) only opens input and runs the controller.
+
 ## Prerequisites
 
 - **Java 21** or later
