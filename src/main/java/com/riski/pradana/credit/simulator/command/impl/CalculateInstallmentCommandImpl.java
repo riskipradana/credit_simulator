@@ -7,7 +7,7 @@ import com.riski.pradana.credit.simulator.constant.BaseInterestRate;
 import com.riski.pradana.credit.simulator.constant.Condition;
 import com.riski.pradana.credit.simulator.constant.VehicleType;
 import com.riski.pradana.credit.simulator.service.CalculateInstallmentService;
-import com.riski.pradana.credit.simulator.service.strategy.InstallmentStrategyResolver;
+import com.riski.pradana.credit.simulator.service.strategy.SteppedInterestInstallmentStrategy;
 
 import java.time.Year;
 import java.util.List;
@@ -17,7 +17,7 @@ public class CalculateInstallmentCommandImpl implements CalculateInstallmentComm
   private final CalculateInstallmentService loanService;
 
   public CalculateInstallmentCommandImpl() {
-    this(InstallmentStrategyResolver.resolveFromEnvironment());
+    this(new SteppedInterestInstallmentStrategy());
   }
 
   public CalculateInstallmentCommandImpl(CalculateInstallmentService loanService) {

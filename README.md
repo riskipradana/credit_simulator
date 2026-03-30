@@ -18,14 +18,7 @@ The interactive flow uses a **Model–View–Controller** split:
 
 ### Installment calculation (Strategy pattern)
 
-Schedule math uses the **Strategy** interface [`CalculateInstallmentService`](src/main/java/com/riski/pradana/credit/simulator/service/CalculateInstallmentService.java) with concrete implementations in [`service/strategy`](src/main/java/com/riski/pradana/credit/simulator/service/strategy/):
-
-| Strategy | Behavior |
-|----------|-----------|
-| **`SteppedInterestInstallmentStrategy`** | Default: annual rate steps after year 1 via [`InstallmentInterestPolicy`](src/main/java/com/riski/pradana/credit/simulator/service/InstallmentInterestPolicy.java). |
-| **`FlatInterestInstallmentStrategy`** | Same base interest rate every year. |
-
-**Configuration:** set environment variable **`INSTALLMENT_STRATEGY`** to **`FLAT`** to use the flat strategy. Unset or any other value uses the stepped strategy. Resolution is done in [`InstallmentStrategyResolver`](src/main/java/com/riski/pradana/credit/simulator/service/strategy/InstallmentStrategyResolver.java) when using the no-arg [`CalculateInstallmentCommandImpl`](src/main/java/com/riski/pradana/credit/simulator/command/impl/CalculateInstallmentCommandImpl.java) constructor.
+Schedule math uses the **Strategy** interface [`CalculateInstallmentService`](src/main/java/com/riski/pradana/credit/simulator/service/CalculateInstallmentService.java). The production implementation is [`SteppedInterestInstallmentStrategy`](src/main/java/com/riski/pradana/credit/simulator/service/strategy/SteppedInterestInstallmentStrategy.java): annual rate steps after year 1, driven by [`InstallmentInterestPolicy`](src/main/java/com/riski/pradana/credit/simulator/service/InstallmentInterestPolicy.java). [`CalculateInstallmentCommandImpl`](src/main/java/com/riski/pradana/credit/simulator/command/impl/CalculateInstallmentCommandImpl.java) is the **context**: it delegates to a `CalculateInstallmentService` injected via constructor (no-arg uses `SteppedInterestInstallmentStrategy`; tests often inject a mock).
 
 ## Prerequisites
 
