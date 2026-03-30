@@ -1,4 +1,4 @@
-package com.riski.pradana.credit.simulator.service.impl;
+package com.riski.pradana.credit.simulator.service.strategy;
 
 import com.riski.pradana.credit.simulator.command.model.CalculateInstallmentCommandResponse;
 import com.riski.pradana.credit.simulator.service.CalculateInstallmentService;
@@ -8,17 +8,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Default strategy for building the per-year installment schedule (interest progression + monthly amount).
+ * Strategy: stepped annual interest after year 1 (odd/even year increments via {@link InstallmentInterestPolicy}).
  */
-public class CalculateInstallmentServiceImpl implements CalculateInstallmentService {
+public final class SteppedInterestInstallmentStrategy implements CalculateInstallmentService {
 
   private final InstallmentInterestPolicy interestPolicy;
 
-  public CalculateInstallmentServiceImpl() {
+  public SteppedInterestInstallmentStrategy() {
     this(InstallmentInterestPolicy.defaultPolicy());
   }
 
-  public CalculateInstallmentServiceImpl(InstallmentInterestPolicy interestPolicy) {
+  public SteppedInterestInstallmentStrategy(InstallmentInterestPolicy interestPolicy) {
     this.interestPolicy = interestPolicy != null ? interestPolicy : InstallmentInterestPolicy.defaultPolicy();
   }
 
@@ -33,11 +33,6 @@ public class CalculateInstallmentServiceImpl implements CalculateInstallmentServ
     return currentRate + interestPolicy.rateIncrementWhenYearsPassedIsOdd();
   }
 
-  private static double monthlyInstallment(double interestRate, double totalLoan, double baseInstallment) {
-    double totalMonthlyInterest = (totalLoan * interestRate / 100) / 12;
-    return baseInstallment + totalMonthlyInterest;
-  }
-
   @Override
   public List<CalculateInstallmentCommandResponse.Installment> calculateMonthlyInstallments(double baseRate,
       double totalLoan,
@@ -50,7 +45,7 @@ public class CalculateInstallmentServiceImpl implements CalculateInstallmentServ
 
     for (int year = 1; year <= tenure; year++) {
       currentRate = nextAnnualRate(year, baseRate, currentRate);
-      double monthly = monthlyInstallment(currentRate, totalLoan, baseInstallment);
+      double monthly = InstallmentScheduleMath.monthlyInstallment(currentRate, totalLoan, baseInstallment);
       CalculateInstallmentCommandResponse.Installment installment =
           new CalculateInstallmentCommandResponse.Installment(year, monthly, currentRate);
       installments.add(installment);

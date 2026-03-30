@@ -16,6 +16,17 @@ The interactive flow uses a **Model–View–Controller** split:
 
 [`CreditSimulatorApplication`](src/main/java/com/riski/pradana/credit/simulator/CreditSimulatorApplication.java) is the **composition root** (wires commands, model, and `createController`). [`CreditSimulator.main`](src/main/java/com/riski/pradana/credit/simulator/CreditSimulator.java) only opens input and runs the controller.
 
+### Installment calculation (Strategy pattern)
+
+Schedule math uses the **Strategy** interface [`CalculateInstallmentService`](src/main/java/com/riski/pradana/credit/simulator/service/CalculateInstallmentService.java) with concrete implementations in [`service/strategy`](src/main/java/com/riski/pradana/credit/simulator/service/strategy/):
+
+| Strategy | Behavior |
+|----------|-----------|
+| **`SteppedInterestInstallmentStrategy`** | Default: annual rate steps after year 1 via [`InstallmentInterestPolicy`](src/main/java/com/riski/pradana/credit/simulator/service/InstallmentInterestPolicy.java). |
+| **`FlatInterestInstallmentStrategy`** | Same base interest rate every year. |
+
+**Configuration:** set environment variable **`INSTALLMENT_STRATEGY`** to **`FLAT`** to use the flat strategy. Unset or any other value uses the stepped strategy. Resolution is done in [`InstallmentStrategyResolver`](src/main/java/com/riski/pradana/credit/simulator/service/strategy/InstallmentStrategyResolver.java) when using the no-arg [`CalculateInstallmentCommandImpl`](src/main/java/com/riski/pradana/credit/simulator/command/impl/CalculateInstallmentCommandImpl.java) constructor.
+
 ## Prerequisites
 
 - **Java 21** or later
